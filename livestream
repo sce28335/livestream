@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Redirecting...</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    a {
+      color: #4fc3f7;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <p>Opening live stream…</p>
+  <p>If you are not redirected, <a id="manualLink" href="https://live.itownchurch.com">tap here to open in Safari or Chrome</a>.</p>
+
+  <script>
+    const target = "https://live.itownchurch.com";
+    const ua = navigator.userAgent || navigator.vendor || "";
+
+    // Checks for common in-app browsers
+    const isInAppBrowser = /FBAN|FBAV|Instagram|Line|WebView|wv/i.test(ua) || 
+                           (window.navigator.standalone === false);
+
+    if (isInAppBrowser) {
+      // Try to break out of in-app browser
+      window.location = target;
+    } else {
+      // Fallback (just open normally)
+      window.location.href = target;
+    }
+  </script>
+</body>
+</html>
