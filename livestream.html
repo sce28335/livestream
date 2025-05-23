@@ -3,43 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Redirecting...</title>
+  <title>Live Stream</title>
   <style>
-    body {
-      background: #111;
-      color: white;
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+      overflow: hidden;
     }
-    a {
-      color: #4fc3f7;
-      font-size: 1.1em;
+    #stream {
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+      background: black;
     }
   </style>
 </head>
 <body>
-  <p>Opening live stream…</p>
-  <p>If you are not redirected, <a id="manualLink" href="https://live.itownchurch.com">tap here to open in Safari or Chrome</a>.</p>
+  <video id="stream" controls autoplay playsinline></video>
 
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
-    const target = "https://live.itownchurch.com";
-    const ua = navigator.userAgent || navigator.vendor || "";
+    const video = document.getElementById('stream');
+    const streamURL = 'https://live.resi.media/itc-fs-in/Manifest.m3u8';
 
-    // Checks for common in-app browsers
-    const isInAppBrowser = /FBAN|FBAV|Instagram|Line|WebView|wv/i.test(ua) || 
-                           (window.navigator.standalone === false);
-
-    if (isInAppBrowser) {
-      // Try to break out of in-app browser
-      window.location = target;
+    if (Hls.isSupported()) {
+      const hls = new Hls({ liveSyncDuration: 3 });
+      hls.loadSource(streamURL);
+      hls.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = streamURL;
     } else {
-      // Fallback (just open normally)
-      window.location.href = target;
+      video.outerHTML = '<p style="color: white; text-align: center;">This device does not support live streaming.</p>';
     }
   </script>
 </body>
